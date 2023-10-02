@@ -8,19 +8,33 @@ public class GameSystem {
     private static final String PLAYER1 = "\u001B[34m"; //Blue
     private static final String PLAYER2 = "\u001B[31m"; //Red
 
-    private int nLines, nColumns, currentPlayer, nChipsToWin, player1Moves, player2Moves;
+    private int nLines, nColumns, currentPlayer, nChipsToWin, player1Moves, player2Moves, boardSize, winner;
     private int board[][];
-    private boolean isOver;
-    
+    private boolean isOver, tie;
     public GameSystem (int nLines, int nColumns, int nChipsToWin) {
         this.nLines = nLines; this.nColumns = nColumns; this.nChipsToWin = nChipsToWin;
-        this.currentPlayer = 1;
-        this.player1Moves = 0;  this.player2Moves = 0;
+        this.currentPlayer = 1; this.winner = 0;
+        this.player1Moves = 0;  this.player2Moves = 0; this.boardSize = nLines * nColumns;
         this.board = new int[nLines][nColumns];
-        this.isOver = false;
+        this.isOver = false; this.tie = false;
     }
 
     public boolean isGameOver() {return this.isOver;}
+
+    public boolean gameTied() {return this.tie;}
+
+    public int getWinner() { return this.winner;}
+
+    public int getMovesMade(int player) throws NoSuchPlayerException {
+        if (player == 1)
+            return this.player1Moves;
+
+        if (player == 2)
+            return this.player2Moves;
+
+        else 
+            throw new NoSuchPlayerException(player);
+    }
 
     public void printBoard() {
         System.out.println();
@@ -80,6 +94,12 @@ public class GameSystem {
                 nextPlayer();
                 moveNotMade = false;
 
+                if ((player1Moves + player2Moves) == boardSize) {
+                    tie = true;
+                    isOver = true;
+                }
+                    //TODO: Set tie boolean to true and check in main if there was a tie
+
             }catch (InputMismatchException e){
                 System.out.println("\nPlease insert only numbers into the prompt");
             }catch (OutOfBoundsException e) {
@@ -126,6 +146,7 @@ public class GameSystem {
             }
         
             if (count >= nChipsToWin) {
+                printBoard();
                 gameWon();
                 break;
             }
@@ -136,24 +157,15 @@ public class GameSystem {
         }
         
         if (maxCount >= nChipsToWin) {
+            printBoard();
             gameWon();
         }
 
     }
 
     private void gameWon() {
-        int movesMade;
-
-        if (currentPlayer == 1)
-            movesMade = player1Moves;
-
-        else if (currentPlayer == 2)
-            movesMade = player2Moves;
-
-        else 
-            movesMade = 0;
-            
-        System.out.println("Player: " + currentPlayer + " has won the game with " + movesMade + " moves");
+        winner = currentPlayer;
+        //TODO: Make a variable that tells main if there has been a winner and if so ask if they wish to save their nbr of moves to the scoreboard, and if so ask the name to be put into the board. 
         isOver = true;
     }
 

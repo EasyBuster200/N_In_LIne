@@ -113,8 +113,22 @@ public class Main {
             game.printBoard();
             game.nextMove(in);
         }
+
+        try {
+            int winner = game.getWinner();
+
+            if (winner != 0) {
+                System.out.println("Player: " + winner + " has won the game with " + game.getMovesMade(winner) + " moves");
+            } else if (game.gameTied())
+                System.out.println("There are no more free positions, game tied.");
+                System.out.println("Thanks for playing!!");
+
+        }catch (NoSuchPlayerException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private static void doNothing() {}
 }
 //TODO: if the whole board has been field end the game on a tie
+//TODO: Maybe when the game is saved ask the names of player 1 and 2, in order to be eaiser to start the game back up ltr on.
