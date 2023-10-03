@@ -98,7 +98,7 @@ public class GameSystem {
                     tie = true;
                     isOver = true;
                 }
-                    //TODO: Set tie boolean to true and check in main if there was a tie
+                    //TODO: Set tie boolean to true and check in main if there was a tie 
 
             }catch (InputMismatchException e){
                 System.out.println("\nPlease insert only numbers into the prompt");
@@ -109,7 +109,7 @@ public class GameSystem {
 
     }
 
-    private void checkForWin(int line, int collumn) { //! Shouldnt work correctly, count might need to be reset each time. If not then a player could have 3 chips horrizontaly and one other chip in any direction and it would count as 4
+    private void checkForWin(int line, int collumn) {
         int[][] directions = {
             {0, 1},    // Right
             {0, -1},   // Left
