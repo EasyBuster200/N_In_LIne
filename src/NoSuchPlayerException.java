@@ -1,8 +1,8 @@
 
 public class NoSuchPlayerException extends Exception{
 
-    public NoSuchPlayerException(int player){
-        super("No player with number " + player + " was found!");
+    public NoSuchPlayerException(String name){
+        super("No player with name: " + name + " was found!");
     }
 
 }

@@ -8,13 +8,17 @@ public class GameSystem {
     private static final String PLAYER1 = "\u001B[34m"; //Blue
     private static final String PLAYER2 = "\u001B[31m"; //Red
 
-    private int nLines, nColumns, currentPlayer, nChipsToWin, player1Moves, player2Moves, boardSize, winner;
+    private int nLines, nColumns, currentPlayer, nChipsToWin, player1Moves, player2Moves, boardSize;
     private int board[][];
     private boolean isOver, tie;
-    public GameSystem (int nLines, int nColumns, int nChipsToWin) {
+    private Player P1, P2, winner;
+
+
+    public GameSystem (int nLines, int nColumns, int nChipsToWin, Player P1, Player P2) {
+        this.P1 = P1; this.P2 = P2;
+        winner = null;
         this.nLines = nLines; this.nColumns = nColumns; this.nChipsToWin = nChipsToWin;
-        this.currentPlayer = 1; this.winner = 0;
-        this.player1Moves = 0;  this.player2Moves = 0; this.boardSize = nLines * nColumns;
+        this.boardSize = nLines * nColumns;
         this.board = new int[nLines][nColumns];
         this.isOver = false; this.tie = false;
     }
@@ -23,9 +27,9 @@ public class GameSystem {
 
     public boolean gameTied() {return this.tie;}
 
-    public int getWinner() { return this.winner;}
+    public Player getWinner() { return this.winner;}
 
-    public int getMovesMade(int player) throws NoSuchPlayerException {
+    public int getMovesMade(int player) throws NoSuchPlayerException { //TODO: Definetly not working
         if (player == 1)
             return this.player1Moves;
 
