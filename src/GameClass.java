@@ -182,6 +182,7 @@ public class GameClass implements Game {
         if (maxCount >= nChipsToWin) {
             printBoard();
             winner = currentPlayer;
+            currentPlayer.wonGame();
             isOver = true;
         }
     }

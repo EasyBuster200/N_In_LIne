@@ -17,7 +17,7 @@ public class GameManagerClass implements GameManager {
         if (players.keySet().contains(name))
             throw new NameAlreadyResgisteredException();
 
-        players.put(name, new Player(name, Colour));
+        players.put(name, new PlayerClass(name, Colour));
     }
 
     @Override
@@ -55,7 +55,6 @@ public class GameManagerClass implements GameManager {
 
     @Override
     public Iterator<Player> getScoreCard() throws NoRegisteredPlayersException {
-        Player[] orderedPlayers = new Player[players.size()];
         //TODO
         return null;
     }

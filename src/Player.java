@@ -1,34 +1,44 @@
-import java.io.Serializable;
 
-public class Player implements Serializable {
+public interface Player {
 
-    private int movesMade, gamesWon;
-    private Colour colour;
-    private final String name;
+    /**
+     * @return a String with the players name
+     */
+    String getName();
 
-    public Player(String name, Colour colour, int gamesWon, int moveMade) { //Pre existing player, with a set number of games won
-        this.name = name;
-        this.colour = colour;
-        movesMade = moveMade; //For saved games I may have to also keep the movesMade variable
-        this.gamesWon = gamesWon;
-    }
+    /**
+     * @return a String with the color code for the players colour
+     */
+    String getColour();
 
-    public Player(String name, Colour colour) { //New Player with no games won or movesMade
-        this(name,colour, 0, 0);
-    }
+    /**
+     * Changes the users current colour to colour
+     * @param colour !=null
+     */
+    void setColour(Colour colour);
 
-    public String getName() {return name;}
+    /**
+     * @return the number of games the user has won
+     */
+    int getGamesWon();
 
-    public String getColour() {return colour.getCode();}
-    
-    public void setColour(Colour colour) {this.colour = colour;}
+    /**
+     * @return the number of moves made by the user
+     */
+    int getMovesMade();
 
-    public int getGamesWon() {return gamesWon;}
+    /**
+     * Increments the moves made by user by 1
+     */
+    void moveMade();
 
-    public int getMovesMade() {return movesMade;}
+    /**
+     * Sets the number of moves made by the user back to 0
+     */
+    void resetMovesMade();
 
-    public void moveMade() {movesMade++;}
-
-    public void resetMovesMade() {movesMade = 0;}
-
+    /**
+     * Increments the number of games won by the player by 1
+     */
+    void wonGame();
 }

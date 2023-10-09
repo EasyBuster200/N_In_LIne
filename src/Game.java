@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import Exceptions.OutOfBoundsException;
 
-public interface Game {
+public interface Game extends Serializable {
     
     /**
      * @return true if the game is over, false otherwise

@@ -1,12 +1,16 @@
-import java.util.InputMismatchException;
-import java.util.Iterator;
 import java.util.Scanner;
-
+import java.util.Iterator;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.InputMismatchException;
 import Exceptions.AreaTooSmallException;
 
 public class Main {
     //Constants
-    private static final String PLAYERS_FILE = "players_data.txt";
+    private static final String SAVE_FILE = "data.txt";
 
     //Menu
     private static final String TITLE = "    N em Linha \n";
@@ -28,14 +32,12 @@ public class Main {
     //Variables
     
     public static void main(String[] args) throws Exception {
-        //TODO: Missing method to read save file
         interperter();
-        //TODO: Missing method to create/update the save file
     }
 
     private static void interperter() {
         Scanner in = new Scanner(System.in);
-        GameManager gm = new GameManagerClass();
+        GameManager gm = getSaveFile();;
         boolean running = true;
         System.out.print(TITLE);
 
@@ -52,8 +54,8 @@ public class Main {
                     case LOAD_GAME -> loadSavedGame(in, gm);
                     case NEW_PLAYER -> registerNewPlayer(in, gm);
                     case SCORE_CARD -> printScoreCard(gm);
-                    case EXIT ->  running = false; //TODO: Make a function that prints the exit message while at the same time saving any information needed to files (Maybe ask if the current game is to be saved, overwrittting the previous save)
-
+                    case EXIT ->  running = false;
+                    //TODO: Add a case to print out registered players (name(in their colour), nbr wins)
                 }
             } catch (InputMismatchException e) {
                 in.nextLine();
@@ -61,10 +63,11 @@ public class Main {
             }
 
         }
-
+        saveProgress(gm);
         in.close();
     }
 
+    
     
     private static void startNewGame(Scanner in, GameManager gm) { 
         try {
@@ -78,12 +81,12 @@ public class Main {
             
             System.out.println("Insert Player1's name: ");
             String player1 = in.nextLine().trim();
-
+            
             System.out.println("Insert Player2's name: ");
             String player2 = in.nextLine().trim();
-
+            
             gm.newGame(nLines, nColumns, nChips, player1, player2);
-
+            
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -104,7 +107,7 @@ public class Main {
                 System.out.printf(SAVED_GAME, current, P1.getName(), P2.getName());
                 current++;
             }
-
+            
             System.out.print("Select a game: ");
             int gameNumber = in.nextInt(); in.nextLine();
             
@@ -119,10 +122,12 @@ public class Main {
     private static void registerNewPlayer(Scanner in, GameManager gm) {
         try {
             System.out.printf(PLAYER_SETPUT, PLAYER_COLOURS);
-            Colour plaeyColour = getColour(in.next());
+            Colour playerColour = getColour(in.next());
             String playerName = in.nextLine().trim();
+            
+            gm.registerUser(playerName, playerColour);
 
-            gm.registerUser(playerName, plaeyColour);
+            System.out.println("Player: " + playerColour.getCode() + playerName + Colour.WHITE.getCode() + " was registered successfully!");
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -130,9 +135,7 @@ public class Main {
     }
     
     private static void printScoreCard(GameManager gm) {
-        try {
-            Iterator<Player> it = gm.getScoreCard();
-        }
+       //TODO
     }
 
     private static Colour getColour(String chosenColour) throws NoSuchColourException {
@@ -140,44 +143,50 @@ public class Main {
             if (chosenColour.toLowerCase().equals(colour.toString()))
             return colour;
         }
-
+        
         throw new NoSuchColourException();
     }
-
+    
     private static int getNChips(Scanner in) {
         int nChips = 0;
-
+        
         while (nChips < 2) {
             System.out.print("Please insert the number of chips in a line needed to win: ");
             nChips = in.nextInt(); in.nextLine();
-
+            
             if (nChips < 2)
-                System.out.printf(SET_BOLD_TEXT + "Error: Number too small!!\n\n" + Colour.WHITE.getCode());
-
+            System.out.printf(SET_BOLD_TEXT + "Error: Number too small!!\n\n" + Colour.WHITE.getCode());
+            
         }
-
+        
         return nChips;
     }
 
-    private static void runGame(GameSystem game, Scanner in) {
-        while (!game.isGameOver()) {
-            game.printBoard();
-            game.nextMove(in); //TODO: change to make all prints be on main
+    private static GameManager getSaveFile() {
+        GameManager gm = new GameManagerClass();
+
+        try (FileInputStream fi = new FileInputStream(SAVE_FILE);
+            ObjectInputStream inStream = new ObjectInputStream(fi)) {
+            
+            gm =(GameManager) inStream.readObject();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
-        Player winner = game.getWinner();
-
-        if (winner != null) {
-            System.out.println("Player: " + winner.getName() + " has won the game with " + winner.getMovesMade() + " moves");
-        } else if (game.gameTied())
-            System.out.println("There are no more free positions, game tied.");
-            System.out.println("Thanks for playing!!");
-
+        return gm;
     }
 
-    private static void doNothing() {}
-}
+    private static void saveProgress(GameManager gm) {
+        try (FileOutputStream fo = new FileOutputStream(SAVE_FILE);
+            ObjectOutputStream outStream = new ObjectOutputStream(fo)) {
 
-//TODO!: Fix GamesystemClass updating it to use the player class.
-//TODO: if the whole board has been field end the game on a tie.
-//TODO: Maybe when the game is saved ask the names of player 1 and 2, in order to be eaiser to start the game back up ltr on.
+            outStream.writeObject(gm);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

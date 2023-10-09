@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Iterator;
 
-public interface GameManager {
+public interface GameManager extends Serializable {
 
     /**
      * Creates a new player object with the given name and colour
