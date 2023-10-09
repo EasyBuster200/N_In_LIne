@@ -1,4 +1,7 @@
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
+
     private int movesMade, gamesWon;
     private Colour colour;
     private final String name;
@@ -16,7 +19,9 @@ public class Player {
 
     public String getName() {return name;}
 
-    public Colour playerColour() {return colour;}
+    public String getColour() {return colour.getCode();}
+    
+    public void setColour(Colour colour) {this.colour = colour;}
 
     public int getGamesWon() {return gamesWon;}
 
@@ -24,5 +29,6 @@ public class Player {
 
     public void moveMade() {movesMade++;}
 
-    public void setColour(Colour colour) {this.colour = colour;}
+    public void resetMovesMade() {movesMade = 0;}
+
 }

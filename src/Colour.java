@@ -5,7 +5,11 @@ public enum Colour {
     GREEN("\u001B[32m", "green"),
     BLUE("\u001B[34m", "blue"),
     INDIGO("\u001B[36m", "indigo"),
-    VIOLET("\u001B[35m", "violet");
+    VIOLET("\u001B[35m", "violet"),
+    WHITE("\033[0;0m", "white"),
+    DARK_GREY("\u001B[30m", "dark grey")
+    ;
+
     //TODO: Later add white/default color excluding it when printing for new players
 
     private String code;
@@ -30,6 +34,15 @@ public enum Colour {
 
     public String toString() {
         return toString;
+    }
+
+    public static String getColours() {
+        String colours = "";
+        for(Colour colour: Colour.values())
+            if (!(colour.equals(Colour.WHITE) || colour.equals(Colour.DARK_GREY)))
+                colours += (colour.getCode() + colour + WHITE.getCode() + " ");
+
+        return colours;
     }
 
 }
