@@ -71,19 +71,21 @@ public class Main {
     
     private static void startNewGame(Scanner in, GameManager gm) { 
         try {
+
+            System.out.println("Insert Player1's name: ");
+            String player1 = in.nextLine().trim();
+
+            System.out.println("Insert Player2's name: ");
+            String player2 = in.nextLine().trim();
+            
+            int nChips = getNChips(in);
+            
             System.out.print("Please enter the number of lines, followed by the number of columns for the game: ");
             int nLines = in.nextInt();
             int nColumns = in.nextInt();
-            int nChips = getNChips(in);
             
             if (nLines <= nChips && nColumns <= nChips)
-            throw new AreaTooSmallException();
-            
-            System.out.println("Insert Player1's name: ");
-            String player1 = in.nextLine().trim();
-            
-            System.out.println("Insert Player2's name: ");
-            String player2 = in.nextLine().trim();
+                throw new AreaTooSmallException();
             
             gm.newGame(nLines, nColumns, nChips, player1, player2);
             
@@ -135,7 +137,13 @@ public class Main {
     }
     
     private static void printScoreCard(GameManager gm) {
-       //TODO
+       //TODO: I should have a seperate data file just for the scoreCard, which will save the top 5 players with most wins from all time.
+       /*
+        * The file would be read each time the application is started,
+        * When a person wins a game, their new number of wins will be compared with the people on the scoreCard, from bottom to top
+        * If the recent winner now belongs in the score card he/she will replace whoever was there before,
+        * THis will cause all players that had less wins then that player to be bumped down one spot.
+        */
     }
 
     private static Colour getColour(String chosenColour) throws NoSuchColourException {

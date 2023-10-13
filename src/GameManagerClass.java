@@ -25,7 +25,7 @@ public class GameManagerClass implements GameManager {
         Player P1 = getPlayer(name1);
         Player P2 = getPlayer(name2);
 
-        games.put(games.size() + 1, new GameClass(nLines, nColumns, nChips ,P1, P2));
+        games.put(games.size() + 1, new GameClass(nLines, nColumns, nChips , P1, P2));
         
     }
 

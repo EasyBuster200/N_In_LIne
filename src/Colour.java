@@ -10,8 +10,6 @@ public enum Colour {
     DARK_GREY("\u001B[30m", "dark grey")
     ;
 
-    //TODO: Later add white/default color excluding it when printing for new players
-
     private String code;
     private String toString;
 
