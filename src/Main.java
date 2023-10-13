@@ -137,6 +137,21 @@ public class Main {
     }
     
     private static void printScoreCard(GameManager gm) {
+        try {
+            Iterator<Player> it = gm.getScoreCard();
+            int i = 0;
+
+            while (it.hasNext() && i < 4) {
+                Player next = it.next();
+
+                System.out.println(next.getColour() + next.getName() + Colour.WHITE.getCode() + " has won " + next.getGamesWon() + " games.");
+                //TODO: Clean up with printf
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+
        //TODO: I should have a seperate data file just for the scoreCard, which will save the top 5 players with most wins from all time.
        /*
         * The file would be read each time the application is started,

@@ -1,6 +1,4 @@
-import java.io.Serializable;
-
-public class PlayerClass implements Serializable, Player {
+public class PlayerClass implements Player {
 
     private int movesMade, gamesWon;
     private Colour colour;
@@ -36,5 +34,17 @@ public class PlayerClass implements Serializable, Player {
 
     @Override
     public void wonGame() {gamesWon++;}
+
+    @Override
+    public int compareTo(Player p2) {
+        if (gamesWon < p2.getGamesWon()) 
+            return -1;
+
+        else if (gamesWon > p2.getGamesWon())
+            return 1;
+
+        else
+            return name.compareTo(p2.getName());
+    }
 
 }

@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public interface Player {
+public interface Player extends Comparable<Player>, Serializable {
 
     /**
      * @return a String with the players name

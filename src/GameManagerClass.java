@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
@@ -55,8 +56,10 @@ public class GameManagerClass implements GameManager {
 
     @Override
     public Iterator<Player> getScoreCard() throws NoRegisteredPlayersException {
-        //TODO
-        return null;
+        if(players.isEmpty())
+            throw new NoRegisteredPlayersException();
+
+        return players.values().iterator();
     }
 
     private Player getPlayer(String name) throws NoSuchPlayerException, NoRegisteredPlayersException {
