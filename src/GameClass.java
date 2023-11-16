@@ -3,7 +3,7 @@ import Exceptions.OutOfBoundsException;
 public class GameClass implements Game {
 
     //Constants
-    private static final String WHITE = Colour.WHITE.getCode();
+    private final String WHITE = Colour.WHITE.getCode();
 
     //Variables
     private int nLines, nColumns, nChipsToWin, boardSize;
@@ -78,14 +78,17 @@ public class GameClass implements Game {
     }
 
     @Override
-    public void nextMove(int pos) throws OutOfBoundsException, GameEndedException {
+    public void nextMove(int pos) throws OutOfBoundsException, GameEndedException, GameTiedException {
         int collumn = pos - 1;
         int line = -1;
 
-        if(collumn == -1) 
+        if (this.isOver) {
+            if (this.tied())
+                throw new GameTiedException();
             throw new GameEndedException();
+        }
         
-        if(pos >= nColumns || pos < 0)
+        if(collumn >= nColumns || collumn < 0)
             throw new OutOfBoundsException();
 
         for (int i = 0; i < nLines; i++)
@@ -185,6 +188,11 @@ public class GameClass implements Game {
             currentPlayer.wonGame();
             isOver = true;
         }
+    }
+
+    @Override
+    public Player currentPlayer() {
+        return currentPlayer;
     }
 
     

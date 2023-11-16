@@ -14,11 +14,14 @@ public class Main {
 
     //Menu
     private static final String TITLE = "    N em Linha \n";
-    private static final String MENU = "\nAvailable Commands: \n 1 - Start New Game \n 2 - Load Game \n 3 - Setup New Player \n 4 - Score Card \n 5 - Exit\n\n-";
+    private static final String MENU = "\nAvailable Commands: \n 1 - Start New Game \n 2 - Load Game \n 3 - Setup New Player \n 4 - Registered Players \n 5 - Score Card \n 6 - Exit\n\n-";
     private static final String INPUT_ERROR = "\nInput must be one of the available commands\n";
     private static final String PLAYER_SETPUT = "\t\t  Player Setup\n\tPlayer choose a colour and name:\n (%s)\n\n-";
     private static final String SAVED_GAMES_MENU = "\tSaved Games:\n";
-    private static final String SAVED_GAME = "%d- %S vs %s";
+    private static final String SAVED_GAME = "%d- %s vs %s\n";
+    private static final String NEXT_MOVE = "%s%s%s make your next move: ";
+    private static final String WINNER = "%s was the winner, congrats!!!";
+    private static final String SCORE_CARD_LAYOUT = "%s%s%s has won %d games.";
     private static final String SET_BOLD_TEXT = "\033[0;1m";
     private static final String PLAYER_COLOURS = " " + Colour.getColours();
 
@@ -26,8 +29,9 @@ public class Main {
     private static final int START_NEW_GAME = 1;
     private static final int LOAD_GAME = 2;
     private static final int NEW_PLAYER = 3;
-    private static final int SCORE_CARD = 4;
-    private static final int EXIT = 5;
+    private static final int REGISTERED_PLAYERS = 4;
+    private static final int SCORE_CARD = 5;
+    private static final int EXIT = 6;
     
     //Variables
     
@@ -53,9 +57,9 @@ public class Main {
                     case START_NEW_GAME -> startNewGame(in, gm);
                     case LOAD_GAME -> loadSavedGame(in, gm);
                     case NEW_PLAYER -> registerNewPlayer(in, gm);
+                    case REGISTERED_PLAYERS -> printRegisteredPlayers(gm);
                     case SCORE_CARD -> printScoreCard(gm);
                     case EXIT ->  running = false;
-                    //TODO: Add a case to print out registered players (name(in their colour), nbr wins)
                 }
             } catch (InputMismatchException e) {
                 in.nextLine();
@@ -68,14 +72,13 @@ public class Main {
     }
 
     
-    
     private static void startNewGame(Scanner in, GameManager gm) { 
         try {
-
-            System.out.println("Insert Player1's name: ");
+            
+            System.out.print("Insert Player1's name: ");
             String player1 = in.nextLine().trim();
 
-            System.out.println("Insert Player2's name: ");
+            System.out.print("Insert Player2's name: ");
             String player2 = in.nextLine().trim();
             
             int nChips = getNChips(in);
@@ -85,15 +88,17 @@ public class Main {
             int nColumns = in.nextInt();
             
             if (nLines <= nChips && nColumns <= nChips)
-                throw new AreaTooSmallException();
+            throw new AreaTooSmallException();
             
-            gm.newGame(nLines, nColumns, nChips, player1, player2);
+            Game g = gm.newGame(nLines, nColumns, nChips, player1, player2);
+            runGame(g, in);
             
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }
         
     }
+    
     
     private static void loadSavedGame(Scanner in, GameManager gm) {
         try {
@@ -113,7 +118,8 @@ public class Main {
             System.out.print("Select a game: ");
             int gameNumber = in.nextInt(); in.nextLine();
             
-            gm.runGame(gameNumber);
+            Game g = gm.getGame(gameNumber);
+            runGame(g, in);
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -128,7 +134,7 @@ public class Main {
             String playerName = in.nextLine().trim();
             
             gm.registerUser(playerName, playerColour);
-
+            
             System.out.println("Player: " + playerColour.getCode() + playerName + Colour.WHITE.getCode() + " was registered successfully!");
             
         } catch (Exception e) {
@@ -140,27 +146,17 @@ public class Main {
         try {
             Iterator<Player> it = gm.getScoreCard();
             int i = 0;
-
+            
             while (it.hasNext() && i < 4) {
                 Player next = it.next();
-
-                System.out.println(next.getColour() + next.getName() + Colour.WHITE.getCode() + " has won " + next.getGamesWon() + " games.");
-                //TODO: Clean up with printf
+                
+                System.out.printf(SCORE_CARD_LAYOUT, next.getColour(), next.getName(), Colour.WHITE.getCode(), next.getGamesWon());
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
-
-       //TODO: I should have a seperate data file just for the scoreCard, which will save the top 5 players with most wins from all time.
-       /*
-        * The file would be read each time the application is started,
-        * When a person wins a game, their new number of wins will be compared with the people on the scoreCard, from bottom to top
-        * If the recent winner now belongs in the score card he/she will replace whoever was there before,
-        * THis will cause all players that had less wins then that player to be bumped down one spot.
-        */
     }
-
+    
     private static Colour getColour(String chosenColour) throws NoSuchColourException {
         for (Colour colour : Colour.values()) {
             if (chosenColour.toLowerCase().equals(colour.toString()))
@@ -184,12 +180,45 @@ public class Main {
         
         return nChips;
     }
+    
+    private static void printRegisteredPlayers(GameManager gm) {
+        try {
+            Iterator<Player> it = gm.getPlayersIterator();
+            
+            while(it.hasNext()) {
+                Player current = it.next();
+                System.out.println(current.getColour() + current.getName() + Colour.WHITE.getCode());
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
+    private static void runGame(Game g, Scanner in) {
+        while (!g.isOver()) {
+            g.printBoard();
+            
+            try {
+                Player currentPlayer = g.currentPlayer();
+                System.out.printf(NEXT_MOVE, currentPlayer.getColour(), currentPlayer.getName(), Colour.WHITE.getCode()); //TODO: Gotta add the part about stopping the game. Input 0 to exit.
+                int move = in.nextInt();
+                g.nextMove(move);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        if (!g.tied()) {
+            System.out.println(System.out.printf(WINNER, g.winner()));
+        }
+
+    }
+    
     private static GameManager getSaveFile() {
         GameManager gm = new GameManagerClass();
-
+        
         try (FileInputStream fi = new FileInputStream(SAVE_FILE);
-            ObjectInputStream inStream = new ObjectInputStream(fi)) {
+        ObjectInputStream inStream = new ObjectInputStream(fi)) {
             
             gm =(GameManager) inStream.readObject();
             
@@ -198,14 +227,14 @@ public class Main {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
+        
         return gm;
     }
-
+    
     private static void saveProgress(GameManager gm) {
         try (FileOutputStream fo = new FileOutputStream(SAVE_FILE);
-            ObjectOutputStream outStream = new ObjectOutputStream(fo)) {
-
+        ObjectOutputStream outStream = new ObjectOutputStream(fo)) {
+            
             outStream.writeObject(gm);
             
         } catch (IOException e) {

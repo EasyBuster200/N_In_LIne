@@ -1,4 +1,3 @@
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
@@ -22,28 +21,24 @@ public class GameManagerClass implements GameManager {
     }
 
     @Override
-    public void newGame(int nLines, int nColumns, int nChips, String name1, String name2) throws NoSuchPlayerException, NoRegisteredPlayersException {
+    public Game newGame(int nLines, int nColumns, int nChips, String name1, String name2) throws NoSuchPlayerException, NoRegisteredPlayersException {
         Player P1 = getPlayer(name1);
         Player P2 = getPlayer(name2);
 
-        games.put(games.size() + 1, new GameClass(nLines, nColumns, nChips , P1, P2));
+        GameClass newGame = new GameClass(nLines, nColumns, nChips, P1, P2);
+        games.put(games.size() + 1, newGame);
         
+        return newGame;
     }
 
     @Override
-    public Player runGame(int gameNumber) throws NoSuchGameException {
+    public Game getGame(int gameNumber) throws NoSuchGameException {
         if (!games.keySet().contains(gameNumber))
             throw new NoSuchGameException();
 
-        Game game = games.get(gameNumber);
+        else 
+            return games.get(gameNumber);
 
-        while(!game.isOver()) 
-            game.printBoard();
-
-        if(game.tied())
-            return null;
-        else
-            return game.winner();
         }
         
     @Override
@@ -55,7 +50,15 @@ public class GameManagerClass implements GameManager {
     }
 
     @Override
-    public Iterator<Player> getScoreCard() throws NoRegisteredPlayersException {
+    public Iterator<Player> getScoreCard() throws NoRegisteredPlayersException { //TODO: Finish
+        if(players.isEmpty())
+            throw new NoRegisteredPlayersException();
+
+        return players.values().iterator();
+    }
+
+    @Override
+    public Iterator<Player> getPlayersIterator() throws NoRegisteredPlayersException {
         if(players.isEmpty())
             throw new NoRegisteredPlayersException();
 
@@ -66,11 +69,11 @@ public class GameManagerClass implements GameManager {
         if(players.isEmpty())
             throw new NoRegisteredPlayersException();
 
-        if(!players.containsKey(name))
+        if(!players.containsKey(name))    
             throw new NoSuchPlayerException(name);
 
-        return players.get(name);
-    }
+        return players.get(name);    
+    }    
 
     
 }

@@ -19,10 +19,11 @@ public interface GameManager extends Serializable {
      * @param nChips >= 2
      * @param P1 != null
      * @param P2 != null
+     * @return 
      * @throws NoSuchPlayerException if any of the given player names isn't registered
      * @throws NoRegisteredPlayersException if there are no registered players
      */
-    void newGame(int nLines, int nColumns, int nChips, String P1, String P2) throws NoSuchPlayerException, NoRegisteredPlayersException;
+    Game newGame(int nLines, int nColumns, int nChips, String P1, String P2) throws NoSuchPlayerException, NoRegisteredPlayersException;
 
     /**
      * Runs the game with the given number, until either a player wins or theres a tie
@@ -30,7 +31,7 @@ public interface GameManager extends Serializable {
      * @return null if the game tied, the winner otherwise
      * @throws NoSuchGameException if there is no game resgistered under the given number
      */
-    Player runGame(int gameNumber) throws NoSuchGameException;
+    Game getGame(int gameNumber) throws NoSuchGameException;
 
     /**
      * @return an Iterator with all the saved games
@@ -43,4 +44,6 @@ public interface GameManager extends Serializable {
      * @throws NoRegisteredPlayersException if there are no registeres players
      */
     Iterator<Player> getScoreCard() throws NoRegisteredPlayersException;
+
+    Iterator<Player> getPlayersIterator() throws NoRegisteredPlayersException;
 }

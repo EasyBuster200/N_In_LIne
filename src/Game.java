@@ -38,6 +38,9 @@ public interface Game extends Serializable {
      * @param pos >= 0 
      * @throws OutOfBoundsException if pos is bigger than the number of collumns in the game
      * @throws GameEndedException if the player/s decide to end the game
+     * @throws GameTiedException
      */
-    void nextMove(int pos) throws OutOfBoundsException, GameEndedException;
+    void nextMove(int pos) throws OutOfBoundsException, GameEndedException, GameTiedException;
+
+    Player currentPlayer();
 }
