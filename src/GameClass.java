@@ -135,7 +135,8 @@ public class GameClass implements Game {
         int[][] directions = {
             {0, 1},    // Right
             {0, -1},   // Left
-            {1, 0},    // Down
+            {1, 0},    // Up
+            {-1,0},    // Down
             {1, 1},    // Diagonal (bottom-left to top-right)
             {1, -1},   // Diagonal (bottom-right to top-left)
             {-1, 1},   // Diagonal (top-left to bottom-right)

@@ -46,4 +46,11 @@ public interface GameManager extends Serializable {
     Iterator<Player> getScoreCard() throws NoRegisteredPlayersException;
 
     Iterator<Player> getPlayersIterator() throws NoRegisteredPlayersException;
+
+    /**
+     * Checks if there are any registered players in the system
+     * @return <code> true <code> if there are registered players
+     * <code> false <code> otherwise.
+     */
+    boolean hasPlayers();
 }
