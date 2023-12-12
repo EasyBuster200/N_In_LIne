@@ -7,6 +7,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.InputMismatchException;
 import Exceptions.AreaTooSmallException;
+import Exceptions.NoRegisteredPlayersException;
+import Exceptions.NoSuchColourException;
+import Game.Colour;
+import Game.Game;
+import Game.GameManager;
+import Game.GameManagerClass;
+import Game.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
