@@ -1,7 +1,13 @@
 import java.io.Serializable;
 import Exceptions.OutOfBoundsException;
+import java.util.UUID;
 
 public interface Game extends Serializable {
+
+    /**
+     * @return the game's unique ID
+     */
+    UUID getGameId();
     
     /**
      * @return true if the game is over, false otherwise

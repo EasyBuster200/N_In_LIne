@@ -7,6 +7,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.InputMismatchException;
 import Exceptions.AreaTooSmallException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class Main {
     //Constants
@@ -97,7 +100,7 @@ public class Main {
             runGame(g, in);
 
             if (g.isOver())
-                //TODO: Remove the game from the system
+                gm.removeGame(g.getGameId());
                 
             
         }catch (Exception e) {
@@ -110,6 +113,7 @@ public class Main {
     private static void loadSavedGame(Scanner in, GameManager gm) {
         try {
             Iterator<Game> gameIt = gm.savedGames();
+            List<UUID> gameIDs = new ArrayList<UUID> ();
             System.out.print(SAVED_GAMES_MENU);
             int current = 1;
             
@@ -117,6 +121,7 @@ public class Main {
                 Game game = gameIt.next();
                 Player P1 = game.getP1();
                 Player P2 = game.getP2();
+                gameIDs.add(game.getGameId());
                 
                 System.out.printf(SAVED_GAME, current, P1.getName(), P2.getName());
                 current++;
@@ -125,7 +130,7 @@ public class Main {
             System.out.print("Select a game: ");
             int gameNumber = in.nextInt(); in.nextLine();
             
-            Game g = gm.getGame(gameNumber);
+            Game g = gm.getGame(gameIDs.get(gameNumber - 1));
             runGame(g, in);
             
         } catch (Exception e) {
@@ -211,7 +216,7 @@ public class Main {
                 move = in.nextInt();
 
                 if (move == 0) {
-                    System.out.println(THX_PLAYING); //TODO: ask if users wnat to save the game
+                    System.out.println(THX_PLAYING); //TODO: ask if users want to save the game
                     break;
                 }
 

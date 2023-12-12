@@ -1,4 +1,5 @@
 import Exceptions.OutOfBoundsException;
+import java.util.UUID;
 
 public class GameClass implements Game {
 
@@ -10,8 +11,10 @@ public class GameClass implements Game {
     private int board[][];
     private boolean isOver, tie;
     private Player P1, P2, currentPlayer, winner;
+    private final UUID gameId;
 
 
+    
     public GameClass(int nLines, int nColumns, int nChipsToWin, Player P1, Player P2) {
         this.P1 = P1; this.P2 = P2;
         P1.resetMovesMade(); P2.resetMovesMade();
@@ -21,8 +24,14 @@ public class GameClass implements Game {
         this.boardSize = nLines * nColumns;
         this.board = new int[nLines][nColumns];
         this.isOver = false; this.tie = false;
+        this.gameId = UUID.randomUUID();
     }
 
+    @Override
+    public UUID getGameId() {
+        return gameId;
+    }
+    
     @Override
     public boolean isOver() {
         return isOver;

@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.UUID;
 
 public interface GameManager extends Serializable {
 
@@ -31,7 +32,7 @@ public interface GameManager extends Serializable {
      * @return null if the game tied, the winner otherwise
      * @throws NoSuchGameException if there is no game resgistered under the given number
      */
-    Game getGame(int gameNumber) throws NoSuchGameException;
+    Game getGame(UUID gameId) throws NoSuchGameException;
 
     /**
      * @return an Iterator with all the saved games
@@ -53,4 +54,6 @@ public interface GameManager extends Serializable {
      * <code> false <code> otherwise.
      */
     boolean hasPlayers();
+
+    void removeGame(UUID gameId);
 }
