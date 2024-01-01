@@ -1,5 +1,6 @@
 package Exceptions;
-import Classes.Colour;
+
+import Game.Colour;
 
 public class NoSavedGamesException extends Exception{
     public NoSavedGamesException() {

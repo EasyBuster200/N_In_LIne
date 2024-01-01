@@ -1,5 +1,6 @@
 package Exceptions;
-import Classes.Colour;
+
+import Game.Colour;
 
 public class NoRegisteredPlayersException extends Exception {
     public NoRegisteredPlayersException() {

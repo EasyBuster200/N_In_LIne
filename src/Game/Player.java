@@ -1,4 +1,5 @@
-package Classes;
+package Game;
+
 import java.io.Serializable;
 
 public interface Player extends Comparable<Player>, Serializable {

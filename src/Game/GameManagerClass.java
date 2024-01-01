@@ -1,7 +1,9 @@
-package Classes;
+package Game;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import Exceptions.NameAlreadyResgisteredException;
 import Exceptions.NoRegisteredPlayersException;
@@ -12,7 +14,7 @@ import Exceptions.NoSuchPlayerException;
 public class GameManagerClass implements GameManager {
 
     private TreeMap<String, Player> players; //Player name --> Player object
-    private HashMap<Integer, Game> games; //Game number --> Game object
+    private HashMap<UUID, Game> games; //Game ID --> Game object
 
     public GameManagerClass() {
         players = new TreeMap<>();
@@ -33,18 +35,18 @@ public class GameManagerClass implements GameManager {
         Player P2 = getPlayer(name2);
 
         GameClass newGame = new GameClass(nLines, nColumns, nChips, P1, P2);
-        games.put(games.size() + 1, newGame);
+        games.put(newGame.getGameId(), newGame);
         
         return newGame;
     }
 
     @Override
-    public Game getGame(int gameNumber) throws NoSuchGameException {
-        if (!games.keySet().contains(gameNumber))
+    public Game getGame(UUID gameID) throws NoSuchGameException {
+        if (!games.keySet().contains(gameID))
             throw new NoSuchGameException();
 
         else 
-            return games.get(gameNumber);
+            return games.get(gameID);
 
         }
         
@@ -80,7 +82,15 @@ public class GameManagerClass implements GameManager {
             throw new NoSuchPlayerException(name);
 
         return players.get(name);    
-    }    
+    }
 
-    
+    @Override
+    public boolean hasPlayers() {
+        return !players.isEmpty();
+    }
+
+    @Override
+    public void removeGame(UUID gameId) {
+        games.remove(gameId);
+    }    
 }

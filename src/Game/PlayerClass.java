@@ -1,4 +1,5 @@
-package Classes;
+package Game;
+
 public class PlayerClass implements Player {
 
     private int movesMade, gamesWon;

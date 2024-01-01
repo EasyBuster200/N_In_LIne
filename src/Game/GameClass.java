@@ -1,8 +1,11 @@
-package Classes;
+package Game;
+
+
 import Exceptions.GameEndedException;
 import Exceptions.GameStoppedException;
 import Exceptions.GameTiedException;
 import Exceptions.OutOfBoundsException;
+import java.util.UUID;
 
 public class GameClass implements Game {
 
@@ -14,8 +17,10 @@ public class GameClass implements Game {
     private int board[][];
     private boolean isOver, tie;
     private Player P1, P2, currentPlayer, winner;
+    private final UUID gameId;
 
 
+    
     public GameClass(int nLines, int nColumns, int nChipsToWin, Player P1, Player P2) {
         this.P1 = P1; this.P2 = P2;
         P1.resetMovesMade(); P2.resetMovesMade();
@@ -25,8 +30,14 @@ public class GameClass implements Game {
         this.boardSize = nLines * nColumns;
         this.board = new int[nLines][nColumns];
         this.isOver = false; this.tie = false;
+        this.gameId = UUID.randomUUID();
     }
 
+    @Override
+    public UUID getGameId() {
+        return gameId;
+    }
+    
     @Override
     public boolean isOver() {
         return isOver;
@@ -82,7 +93,7 @@ public class GameClass implements Game {
     }
 
     @Override
-    public void nextMove(int pos) throws OutOfBoundsException, GameEndedException, GameTiedException {
+    public void nextMove(int pos) throws OutOfBoundsException, GameEndedException, GameTiedException, GameStoppedException {
         int collumn = pos - 1;
         int line = -1;
 
@@ -144,7 +155,8 @@ public class GameClass implements Game {
         int[][] directions = {
             {0, 1},    // Right
             {0, -1},   // Left
-            {1, 0},    // Down
+            {1, 0},    // Up
+            {-1,0},    // Down
             {1, 1},    // Diagonal (bottom-left to top-right)
             {1, -1},   // Diagonal (bottom-right to top-left)
             {-1, 1},   // Diagonal (top-left to bottom-right)

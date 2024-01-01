@@ -1,7 +1,8 @@
-package Classes;
+package Game;
+
 import java.io.Serializable;
 import java.util.Iterator;
-
+import java.util.UUID;
 import Exceptions.NameAlreadyResgisteredException;
 import Exceptions.NoRegisteredPlayersException;
 import Exceptions.NoSavedGamesException;
@@ -38,7 +39,7 @@ public interface GameManager extends Serializable {
      * @return null if the game tied, the winner otherwise
      * @throws NoSuchGameException if there is no game resgistered under the given number
      */
-    Game getGame(int gameNumber) throws NoSuchGameException;
+    Game getGame(UUID gameId) throws NoSuchGameException;
 
     /**
      * @return an Iterator with all the saved games
@@ -53,4 +54,13 @@ public interface GameManager extends Serializable {
     Iterator<Player> getScoreCard() throws NoRegisteredPlayersException;
 
     Iterator<Player> getPlayersIterator() throws NoRegisteredPlayersException;
+
+    /**
+     * Checks if there are any registered players in the system
+     * @return <code> true <code> if there are registered players
+     * <code> false <code> otherwise.
+     */
+    boolean hasPlayers();
+
+    void removeGame(UUID gameId);
 }

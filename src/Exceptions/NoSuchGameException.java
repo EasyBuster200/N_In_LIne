@@ -1,5 +1,6 @@
 package Exceptions;
-import Classes.Colour;
+
+import Game.Colour;
 
 public class NoSuchGameException extends Exception {
     public NoSuchGameException() {

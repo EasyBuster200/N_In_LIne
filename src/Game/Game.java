@@ -1,11 +1,21 @@
-package Classes;
-import java.io.Serializable;
+package Game;
 
+import java.io.Serializable;
 import Exceptions.GameEndedException;
+import Exceptions.GameStoppedException;
+
+import java.io.Serializable;
 import Exceptions.GameTiedException;
 import Exceptions.OutOfBoundsException;
+import java.util.UUID;
+import Exceptions.GameEndedException;
 
 public interface Game extends Serializable {
+
+    /**
+     * @return the game's unique ID
+     */
+    UUID getGameId();
     
     /**
      * @return true if the game is over, false otherwise
@@ -43,8 +53,9 @@ public interface Game extends Serializable {
      * @throws OutOfBoundsException if pos is bigger than the number of collumns in the game
      * @throws GameEndedException if the player/s decide to end the game
      * @throws GameTiedException
+     * @throws GameStoppedException
      */
-    void nextMove(int pos) throws OutOfBoundsException, GameEndedException, GameTiedException;
+    void nextMove(int pos) throws OutOfBoundsException, GameEndedException, GameTiedException, GameStoppedException;
 
     Player currentPlayer();
 }

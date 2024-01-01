@@ -1,4 +1,5 @@
-package Classes;
+package Game;
+
 
 import Exceptions.UnknownColourException;
 

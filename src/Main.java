@@ -1,11 +1,5 @@
 import java.util.Scanner;
 
-import Classes.Colour;
-import Classes.Game;
-import Classes.GameManager;
-import Classes.GameManagerClass;
-import Classes.Player;
-
 import java.util.Iterator;
 import java.io.IOException;
 import java.io.FileInputStream;
@@ -15,6 +9,16 @@ import java.io.ObjectOutputStream;
 import java.util.InputMismatchException;
 import Exceptions.AreaTooSmallException;
 import Exceptions.NoSuchColourException;
+import Exceptions.NoRegisteredPlayersException;
+import Game.Colour;
+import Game.Game;
+import Game.GameManager;
+import Game.GameManagerClass;
+import Game.Player;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 
 public class Main {
     //Constants
@@ -27,10 +31,11 @@ public class Main {
     private static final String PLAYER_SETPUT = "\t\t  Player Setup\n\tPlayer choose a colour and name:\n (%s)\n\n-";
     private static final String SAVED_GAMES_MENU = "\tSaved Games:\n";
     private static final String SAVED_GAME = "%d- %s vs %s\n";
-    private static final String NEXT_MOVE = "%s%s%s make your next move: ";
-    private static final String WINNER = "%s was the winner, congrats!!!";
+    private static final String NEXT_MOVE = "%s%s%s make your next move (0 to exit): ";
+    private static final String WINNER = "%s%s%s was the winner, congrats!!!\n";
     private static final String SCORE_CARD_LAYOUT = "%s%s%s has won %d games.";
     private static final String SET_BOLD_TEXT = "\033[0;1m";
+    private static final String THX_PLAYING = "Thank you for playing";
     private static final String PLAYER_COLOURS = " " + Colour.getColours();
 
     //Commands
@@ -82,6 +87,8 @@ public class Main {
     
     private static void startNewGame(Scanner in, GameManager gm) { 
         try {
+            if (!gm.hasPlayers())
+                throw new NoRegisteredPlayersException();
             
             System.out.print("Insert Player1's name: ");
             String player1 = in.nextLine().trim();
@@ -100,6 +107,10 @@ public class Main {
             
             Game g = gm.newGame(nLines, nColumns, nChips, player1, player2);
             runGame(g, in);
+
+            if (g.isOver())
+                gm.removeGame(g.getGameId());
+                
             
         }catch (Exception e) {
             System.out.println(e.getMessage());
@@ -111,6 +122,7 @@ public class Main {
     private static void loadSavedGame(Scanner in, GameManager gm) {
         try {
             Iterator<Game> gameIt = gm.savedGames();
+            List<UUID> gameIDs = new ArrayList<UUID> ();
             System.out.print(SAVED_GAMES_MENU);
             int current = 1;
             
@@ -118,6 +130,7 @@ public class Main {
                 Game game = gameIt.next();
                 Player P1 = game.getP1();
                 Player P2 = game.getP2();
+                gameIDs.add(game.getGameId());
                 
                 System.out.printf(SAVED_GAME, current, P1.getName(), P2.getName());
                 current++;
@@ -126,7 +139,7 @@ public class Main {
             System.out.print("Select a game: ");
             int gameNumber = in.nextInt(); in.nextLine();
             
-            Game g = gm.getGame(gameNumber);
+            Game g = gm.getGame(gameIDs.get(gameNumber - 1));
             runGame(g, in);
             
         } catch (Exception e) {
@@ -203,22 +216,24 @@ public class Main {
     }
 
     private static void runGame(Game g, Scanner in) {
+        int move = 0;
         while (!g.isOver()) {
             g.printBoard();
-            
             try {
                 Player currentPlayer = g.currentPlayer();
                 System.out.println("Input 0 to exit");
                 System.out.printf(NEXT_MOVE, currentPlayer.getColour(), currentPlayer.getName(), Colour.WHITE.getCode()); //TODO: Gotta add the part about stopping the game. Input 0 to exit.
-                int move = in.nextInt();
+                move = in.nextInt();
+
                 g.nextMove(move);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
 
-        if (!g.tied()) {
-            System.out.println(System.out.printf(WINNER, g.winner()));
+        if (!g.tied() && move != 0) {
+            Player winner = g.winner();
+            System.out.printf(WINNER, winner.getColour(), winner.getName(), Colour.WHITE.getCode());
         }
 
     }
