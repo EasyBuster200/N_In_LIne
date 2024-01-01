@@ -1,4 +1,11 @@
 import java.util.Scanner;
+
+import Classes.Colour;
+import Classes.Game;
+import Classes.GameManager;
+import Classes.GameManagerClass;
+import Classes.Player;
+
 import java.util.Iterator;
 import java.io.IOException;
 import java.io.FileInputStream;
@@ -7,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.InputMismatchException;
 import Exceptions.AreaTooSmallException;
+import Exceptions.NoSuchColourException;
 
 public class Main {
     //Constants
@@ -200,6 +208,7 @@ public class Main {
             
             try {
                 Player currentPlayer = g.currentPlayer();
+                System.out.println("Input 0 to exit");
                 System.out.printf(NEXT_MOVE, currentPlayer.getColour(), currentPlayer.getName(), Colour.WHITE.getCode()); //TODO: Gotta add the part about stopping the game. Input 0 to exit.
                 int move = in.nextInt();
                 g.nextMove(move);
