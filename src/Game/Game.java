@@ -3,12 +3,9 @@ package Game;
 import java.io.Serializable;
 import Exceptions.GameEndedException;
 import Exceptions.GameStoppedException;
-
-import java.io.Serializable;
 import Exceptions.GameTiedException;
 import Exceptions.OutOfBoundsException;
 import java.util.UUID;
-import Exceptions.GameEndedException;
 
 public interface Game extends Serializable {
 

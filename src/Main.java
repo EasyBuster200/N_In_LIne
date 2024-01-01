@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.InputMismatchException;
 import Exceptions.AreaTooSmallException;
+import Exceptions.GameStoppedException;
 import Exceptions.NoSuchColourException;
 import Exceptions.NoRegisteredPlayersException;
 import Game.Colour;
@@ -226,6 +227,8 @@ public class Main {
                 move = in.nextInt();
 
                 g.nextMove(move);
+            } catch (GameStoppedException e) {
+                gameStopped();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -264,5 +267,9 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void gameStopped() {
+        //TODO: Finish
     }
 }
