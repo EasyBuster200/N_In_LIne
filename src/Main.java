@@ -48,14 +48,16 @@ public class Main {
     private static final int EXIT = 6;
     
     //Variables
+    private static GameManager gm;
+    private static Scanner in;
     
     public static void main(String[] args) throws Exception {
         interperter();
     }
 
     private static void interperter() {
-        Scanner in = new Scanner(System.in);
-        GameManager gm = getSaveFile();;
+        in = new Scanner(System.in);
+        gm = getSaveFile();;
         boolean running = true;
         System.out.print(TITLE);
 
@@ -68,11 +70,11 @@ public class Main {
                 cmd = in.nextInt(); in.nextLine();
                 
                 switch (cmd) {
-                    case START_NEW_GAME -> startNewGame(in, gm);
-                    case LOAD_GAME -> loadSavedGame(in, gm);
-                    case NEW_PLAYER -> registerNewPlayer(in, gm);
-                    case REGISTERED_PLAYERS -> printRegisteredPlayers(gm);
-                    case SCORE_CARD -> printScoreCard(gm);
+                    case START_NEW_GAME -> startNewGame();
+                    case LOAD_GAME -> loadSavedGame();
+                    case NEW_PLAYER -> registerNewPlayer();
+                    case REGISTERED_PLAYERS -> printRegisteredPlayers();
+                    case SCORE_CARD -> printScoreCard();
                     case EXIT ->  running = false;
                 }
             } catch (InputMismatchException e) {
@@ -81,12 +83,12 @@ public class Main {
             }
 
         }
-        saveProgress(gm);
+        saveProgress();
         in.close();
     }
 
     
-    private static void startNewGame(Scanner in, GameManager gm) { 
+    private static void startNewGame() { 
         try {
             if (!gm.hasPlayers())
                 throw new NoRegisteredPlayersException();
@@ -97,7 +99,7 @@ public class Main {
             System.out.print("Insert Player2's name: ");
             String player2 = in.nextLine().trim();
             
-            int nChips = getNChips(in);
+            int nChips = getNChips();
             
             System.out.print("Please enter the number of lines, followed by the number of columns for the game: ");
             int nLines = in.nextInt();
@@ -107,7 +109,7 @@ public class Main {
             throw new AreaTooSmallException();
             
             Game g = gm.newGame(nLines, nColumns, nChips, player1, player2);
-            runGame(g, in);
+            runGame(g);
 
             if (g.isOver())
                 gm.removeGame(g.getGameId());
@@ -120,7 +122,7 @@ public class Main {
     }
     
     
-    private static void loadSavedGame(Scanner in, GameManager gm) {
+    private static void loadSavedGame() {
         try {
             Iterator<Game> gameIt = gm.savedGames();
             List<UUID> gameIDs = new ArrayList<UUID> ();
@@ -141,7 +143,7 @@ public class Main {
             int gameNumber = in.nextInt(); in.nextLine();
             
             Game g = gm.getGame(gameIDs.get(gameNumber - 1));
-            runGame(g, in);
+            runGame(g);
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -149,7 +151,7 @@ public class Main {
     }
     
     
-    private static void registerNewPlayer(Scanner in, GameManager gm) {
+    private static void registerNewPlayer() {
         try {
             System.out.printf(PLAYER_SETPUT, PLAYER_COLOURS);
             Colour playerColour = getColour(in.next());
@@ -164,7 +166,7 @@ public class Main {
         }
     }
     
-    private static void printScoreCard(GameManager gm) {
+    private static void printScoreCard() {
         try {
             Iterator<Player> it = gm.getScoreCard();
             int i = 0;
@@ -188,7 +190,7 @@ public class Main {
         throw new NoSuchColourException();
     }
     
-    private static int getNChips(Scanner in) {
+    private static int getNChips() {
         int nChips = 0;
         
         while (nChips < 2) {
@@ -203,7 +205,7 @@ public class Main {
         return nChips;
     }
     
-    private static void printRegisteredPlayers(GameManager gm) {
+    private static void printRegisteredPlayers() {
         try {
             Iterator<Player> it = gm.getPlayersIterator();
             
@@ -216,19 +218,21 @@ public class Main {
         }
     }
 
-    private static void runGame(Game g, Scanner in) {
+    private static void runGame(Game g) {
         int move = 0;
         while (!g.isOver()) {
             g.printBoard();
             try {
                 Player currentPlayer = g.currentPlayer();
-                System.out.println("Input 0 to exit");
-                System.out.printf(NEXT_MOVE, currentPlayer.getColour(), currentPlayer.getName(), Colour.WHITE.getCode()); //TODO: Gotta add the part about stopping the game. Input 0 to exit.
-                move = in.nextInt();
 
+                System.out.println("Input 0 to exit");
+                System.out.printf(NEXT_MOVE, currentPlayer.getColour(), currentPlayer.getName(), Colour.WHITE.getCode());
+
+                move = in.nextInt();
                 g.nextMove(move);
+
             } catch (GameStoppedException e) {
-                gameStopped();
+                gameStopped(g);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -250,15 +254,15 @@ public class Main {
             gm =(GameManager) inStream.readObject();
             
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         
         return gm;
     }
     
-    private static void saveProgress(GameManager gm) {
+    private static void saveProgress() {
         try (FileOutputStream fo = new FileOutputStream(SAVE_FILE);
         ObjectOutputStream outStream = new ObjectOutputStream(fo)) {
             
@@ -269,7 +273,17 @@ public class Main {
         }
     }
 
-    private static void gameStopped() {
-        //TODO: Finish
+    private static void gameStopped(Game g) {
+        System.out.print("Would you like to save the current game (Y/N): ");
+        String answer = in.nextLine().strip();
+
+        if (answer.equalsIgnoreCase("N")) {
+            gm.removeGame(g.getGameId());
+            System.out.println("Game successfully removed");
+
+        }else
+            System.out.println("Game successfully saved");
+
+        System.out.println(THX_PLAYING);
     }
 }
