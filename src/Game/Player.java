@@ -2,6 +2,9 @@ package Game;
 
 import java.io.Serializable;
 
+/**
+ * Interface for the Player object
+ */
 public interface Player extends Comparable<Player>, Serializable {
 
     /**

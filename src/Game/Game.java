@@ -7,6 +7,9 @@ import Exceptions.GameTiedException;
 import Exceptions.OutOfBoundsException;
 import java.util.UUID;
 
+/**
+ * Interface for the Game Class
+ */
 public interface Game extends Serializable {
 
     /**
@@ -54,5 +57,8 @@ public interface Game extends Serializable {
      */
     void nextMove(int pos) throws OutOfBoundsException, GameEndedException, GameTiedException, GameStoppedException;
 
+    /**
+     * @return the current player
+     */
     Player currentPlayer();
 }

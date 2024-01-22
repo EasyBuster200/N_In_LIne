@@ -1,26 +1,26 @@
 package Game;
 
-
 import Exceptions.GameEndedException;
 import Exceptions.GameStoppedException;
 import Exceptions.GameTiedException;
 import Exceptions.OutOfBoundsException;
 import java.util.UUID;
 
+/**
+ * Implementation of the Interface Game, made for managing all the information of a Game
+ */
 public class GameClass implements Game {
 
     //Constants
     private final String WHITE = Colour.WHITE.getCode();
+    private final UUID gameId;
 
     //Variables
     private int nLines, nColumns, nChipsToWin, boardSize;
     private int board[][];
     private boolean isOver, tie;
     private Player P1, P2, currentPlayer, winner;
-    private final UUID gameId;
 
-
-    
     public GameClass(int nLines, int nColumns, int nChipsToWin, Player P1, Player P2) {
         this.P1 = P1; this.P2 = P2;
         P1.resetMovesMade(); P2.resetMovesMade();
@@ -47,20 +47,25 @@ public class GameClass implements Game {
     public Player winner() {
         return winner;
     }
-
+    
     @Override
     public boolean tied() {
         return tie;
     }
-
+    
     @Override
     public Player getP1() {
         return P1;
     }
-
+    
     @Override
     public Player getP2() {
         return P2;
+    }
+    
+    @Override
+    public Player currentPlayer() {
+        return currentPlayer;
     }
 
     @Override
@@ -123,12 +128,12 @@ public class GameClass implements Game {
         if (currentPlayer == P1)
             board[line][collumn] = 1;
         else 
-            board[line][collumn] = 2;
-
+        board[line][collumn] = 2;
+        
         checkForWin(line, collumn);
         nextPlayer();
         currentPlayer.moveMade();
-
+        
         if(P1.getMovesMade() + P2.getMovesMade() == boardSize) {
             tie = true;
             isOver = true;
@@ -136,7 +141,9 @@ public class GameClass implements Game {
         
     }
 
-
+    /**
+     * Changes the current player, to the next player
+     */
     private void nextPlayer() {
         if (currentPlayer == P1)
             currentPlayer = P2;
@@ -144,6 +151,11 @@ public class GameClass implements Game {
             currentPlayer = P1;
     }
 
+    /**
+     * Checks if the lattest move has caused the current player to win the game
+     * @param line line of the players move
+     * @param column collumn of the players move
+     */
     private void checkForWin(int line, int column) {
         int playerNum;
 
@@ -210,11 +222,4 @@ public class GameClass implements Game {
             isOver = true;
         }
     }
-
-    @Override
-    public Player currentPlayer() {
-        return currentPlayer;
-    }
-
-    
 }

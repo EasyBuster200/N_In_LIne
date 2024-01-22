@@ -8,7 +8,10 @@ import Exceptions.NoRegisteredPlayersException;
 import Exceptions.NoSavedGamesException;
 import Exceptions.NoSuchGameException;
 import Exceptions.NoSuchPlayerException;
-
+/**
+ * @author EasyBuster (Duarte Coelho)
+ * Interface for a class responsible for managing and running all the games / players registered in the system
+ */
 public interface GameManager extends Serializable {
 
     /**
@@ -53,6 +56,10 @@ public interface GameManager extends Serializable {
      */
     Iterator<Player> getScoreCard() throws NoRegisteredPlayersException;
 
+    /**
+     * @return Iterator with all the players in the system
+     * @throws NoRegisteredPlayersException when there are no registered players in the system
+     */
     Iterator<Player> getPlayersIterator() throws NoRegisteredPlayersException;
 
     /**
@@ -62,6 +69,9 @@ public interface GameManager extends Serializable {
      */
     boolean hasPlayers();
 
-    //TODO: Comment + Dont know if I should have an exception for unregistered game ID
+    /**
+     * Removes the game with the given ID
+     * @param gameId ID of the game to be removed
+     */
     void removeGame(UUID gameId);
 }

@@ -55,6 +55,9 @@ public class Main {
         interperter();
     }
 
+    /**
+     * Method responsible for reading and interperting the users input.
+     */
     private static void interperter() {
         in = new Scanner(System.in);
         gm = getSaveFile();;
@@ -88,6 +91,10 @@ public class Main {
     }
 
     
+    /**
+     * Method called when the user decides to start a new game.
+     * Method creates and registeres a new game with the information given by the user
+     */
     private static void startNewGame() { 
         try {
             if (!gm.hasPlayers())
@@ -122,6 +129,9 @@ public class Main {
     }
     
     
+    /**
+     * Method to load a saved game from memory.
+     */
     private static void loadSavedGame() {
         try {
             Iterator<Game> gameIt = gm.savedGames();
@@ -151,6 +161,9 @@ public class Main {
     }
     
     
+    /**
+     * Method to register a new player to the system
+     */
     private static void registerNewPlayer() {
         try {
             System.out.printf(PLAYER_SETPUT, PLAYER_COLOURS);
@@ -166,6 +179,9 @@ public class Main {
         }
     }
     
+    /**
+     * Method responsible for printing the current scorecard
+     */
     private static void printScoreCard() {
         try {
             Iterator<Player> it = gm.getScoreCard();
@@ -181,6 +197,12 @@ public class Main {
         }
     }
     
+    /**
+     * Method to get the Colour object correspondant to the String given
+     * @param chosenColour String format of the COlour we are looking for 
+     * @return Colour object we are looking for
+     * @throws NoSuchColourException when there is no colour of the given String
+     */
     private static Colour getColour(String chosenColour) throws NoSuchColourException {
         for (Colour colour : Colour.values()) {
             if (chosenColour.toLowerCase().equals(colour.toString()))
@@ -190,6 +212,10 @@ public class Main {
         throw new NoSuchColourException();
     }
     
+    /**
+     * Auxilary method to get the number of chips in a row needed to win the Game 
+     * @return number of chips needed in a row to win the game
+     */
     private static int getNChips() {
         int nChips = 0;
         
@@ -205,6 +231,9 @@ public class Main {
         return nChips;
     }
     
+    /**
+     * Method to print out all the currently registered players
+     */
     private static void printRegisteredPlayers() {
         try {
             Iterator<Player> it = gm.getPlayersIterator();
@@ -218,6 +247,10 @@ public class Main {
         }
     }
 
+    /**
+     * Method to run a given Game until one of the users wins, or they decide to stop
+     * @param g Game to be run
+     */
     private static void runGame(Game g) {
         int move = 0;
         while (!g.isOver()) {
@@ -245,6 +278,10 @@ public class Main {
 
     }
     
+    /**
+     * Method to read the save file of the GameManger Class
+     * @return the GameManager object read from a file, or a new GameManger object if no such file was found
+     */
     private static GameManager getSaveFile() {
         GameManager gm = new GameManagerClass();
         
@@ -262,6 +299,9 @@ public class Main {
         return gm;
     }
     
+    /**
+     * Method to save the current state of the program to a File
+     */
     private static void saveProgress() {
         try (FileOutputStream fo = new FileOutputStream(SAVE_FILE);
         ObjectOutputStream outStream = new ObjectOutputStream(fo)) {
@@ -273,6 +313,10 @@ public class Main {
         }
     }
 
+    /**
+     * Auxilary method to stop a game halfway through
+     * @param g Game being stopped
+     */
     private static void gameStopped(Game g) {
         System.out.print("Would you like to save the current game (Y/N): ");
         String answer = in.nextLine().strip();

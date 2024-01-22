@@ -1,7 +1,12 @@
 package Game;
 
+/**
+ * Implementation of the Player Interface.
+ * Responsible for managing a Player and all their information
+ */
 public class PlayerClass implements Player {
 
+    //Variables
     private int movesMade, gamesWon;
     private Colour colour;
     private final String name;

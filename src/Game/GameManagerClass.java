@@ -10,8 +10,12 @@ import Exceptions.NoSavedGamesException;
 import Exceptions.NoSuchGameException;
 import Exceptions.NoSuchPlayerException;
 
+/**
+ * Implementation of the interface GameManager
+ */
 public class GameManagerClass implements GameManager {
 
+    //Variables
     private TreeMap<String, Player> players; //Player name --> Player object
     private HashMap<UUID, Game> games; //Game ID --> Game object
 
@@ -58,7 +62,7 @@ public class GameManagerClass implements GameManager {
     }
 
     @Override
-    public Iterator<Player> getScoreCard() throws NoRegisteredPlayersException { //TODO: Finish
+    public Iterator<Player> getScoreCard() throws NoRegisteredPlayersException { 
         if(players.isEmpty())
             throw new NoRegisteredPlayersException();
 
@@ -73,6 +77,23 @@ public class GameManagerClass implements GameManager {
         return players.values().iterator();
     }
 
+    @Override
+    public boolean hasPlayers() {
+        return !players.isEmpty();
+    }
+
+    @Override
+    public void removeGame(UUID gameId) {
+        games.remove(gameId); 
+    }  
+
+    /**
+     * Returns the player object from the name of the player
+     * @param name players name
+     * @return player object corresponding to the given name
+     * @throws NoSuchPlayerException when there are no players registered with the given name 
+     * @throws NoRegisteredPlayersException when there are no registered players in the system
+     */
     private Player getPlayer(String name) throws NoSuchPlayerException, NoRegisteredPlayersException {
         if(players.isEmpty())
             throw new NoRegisteredPlayersException();
@@ -83,13 +104,4 @@ public class GameManagerClass implements GameManager {
         return players.get(name);    
     }
 
-    @Override
-    public boolean hasPlayers() {
-        return !players.isEmpty();
-    }
-
-    @Override
-    public void removeGame(UUID gameId) {
-        games.remove(gameId); 
-    }    
 }
