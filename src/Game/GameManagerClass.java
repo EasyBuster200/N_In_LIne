@@ -90,6 +90,6 @@ public class GameManagerClass implements GameManager {
 
     @Override
     public void removeGame(UUID gameId) {
-        games.remove(gameId);
+        games.remove(gameId); 
     }    
 }

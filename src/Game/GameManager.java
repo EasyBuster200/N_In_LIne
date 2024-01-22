@@ -48,7 +48,7 @@ public interface GameManager extends Serializable {
     Iterator<Game> savedGames() throws NoSavedGamesException;
 
     /**
-     * @return an Iterator with the players ordered by their number of wins
+     * @return an Iterator with the players ordered by their number of wins, by order of insertion otherwise
      * @throws NoRegisteredPlayersException if there are no registeres players
      */
     Iterator<Player> getScoreCard() throws NoRegisteredPlayersException;
@@ -62,5 +62,6 @@ public interface GameManager extends Serializable {
      */
     boolean hasPlayers();
 
+    //TODO: Comment + Dont know if I should have an exception for unregistered game ID
     void removeGame(UUID gameId);
 }
