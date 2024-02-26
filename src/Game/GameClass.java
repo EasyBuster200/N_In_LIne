@@ -204,6 +204,7 @@ public class GameClass implements Game {
             
                 if (count >= nChipsToWin) {
                     printBoard();
+                    currentPlayer.wonGame();
                     winner = currentPlayer;
                     isOver = true;
                     break;

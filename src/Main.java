@@ -1,5 +1,4 @@
 import java.util.Scanner;
-
 import java.util.Iterator;
 import java.io.IOException;
 import java.io.FileInputStream;
@@ -34,7 +33,7 @@ public class Main {
     private static final String SAVED_GAME = "%d- %s vs %s\n";
     private static final String NEXT_MOVE = "%s%s%s make your next move (0 to exit): ";
     private static final String WINNER = "%s%s%s was the winner, congrats!!!\n";
-    private static final String SCORE_CARD_LAYOUT = "%s%s%s has won %d games.";
+    private static final String SCORE_CARD_LAYOUT = "%s%s%s has won %d games.\n";
     private static final String SET_BOLD_TEXT = "\033[0;1m";
     private static final String THX_PLAYING = "Thank you for playing";
     private static final String PLAYER_COLOURS = " " + Colour.getColours();
@@ -331,3 +330,5 @@ public class Main {
         System.out.println(THX_PLAYING);
     }
 }
+
+//TODO; Change order of printing the score card. Make it ordered by the number of wins
